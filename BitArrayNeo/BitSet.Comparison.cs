@@ -19,7 +19,7 @@ namespace BitArrayNeo
 
         public bool Equals(BitSet other) => AreEqual(in this, in other);
 
-        public override bool Equals(object obj) => obj is BitSet x && Equals(x);
+        public override bool Equals(object? obj) => obj is BitSet x && Equals(x);
 
         public static bool operator ==(in BitSet x1, in BitSet x2) => AreEqual(in x1, in x2);
 
@@ -27,15 +27,25 @@ namespace BitArrayNeo
 
         public override int GetHashCode()
         {
+#if !NET45
             HashCode h = new HashCode();
             h.Add(_data);
             h.Add(_extra.Length);
             foreach (var x in _extra) h.Add(x);
             return h.ToHashCode();
+#else
+            var h = 17;
+            h = h * 31 + _data.GetHashCode();
+            h = h * 31 + _extra.Length.GetHashCode();
+            for (int i = 0; i < _extra.Length; i++)
+                h = h * 31 + _extra[i].GetHashCode();
+            return h;
+#endif
         }
 
         public int CompareTo(BitSet other) => Compare(in this, in other);
 
-        int IComparable.CompareTo(object obj) => CompareTo((BitSet) obj);
+        int IComparable.CompareTo(object? obj) =>
+            obj != null ? CompareTo((BitSet) obj) : throw new ArgumentNullException(nameof(obj));
     }
 }

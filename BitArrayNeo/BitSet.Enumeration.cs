@@ -13,7 +13,7 @@ namespace BitArrayNeo
             private ulong _currentField;
             private int _currentFieldIndex;
 
-            public Enumerator(in BitSet bs)
+            internal Enumerator(in BitSet bs)
             {
                 _bitSet = bs;
                 _nextItem = -1;

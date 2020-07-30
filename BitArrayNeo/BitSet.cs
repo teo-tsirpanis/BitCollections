@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,12 @@ namespace BitArrayNeo
         private readonly ulong _data;
         private readonly ulong[] _extra;
 
-        private static readonly ulong[] _emptyArray = new ulong[0];
+        private static readonly ulong[] _emptyArray =
+#if !NET45
+            Array.Empty<ulong>();
+#else
+            new ulong[0];
+#endif
         private static readonly BitSet _empty = new BitSet(0, NewArray(0));
 
         private BitSet(ulong data, ulong[] extra)
