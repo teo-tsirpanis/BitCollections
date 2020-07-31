@@ -7,6 +7,13 @@ namespace BitArrayNeo
 {
     public partial struct BitSet
     {
+        /// <summary>
+        /// Returns a <see cref="BitSet"/> whose elements
+        /// exist in either of the two given bit sets.
+        /// </summary>
+        /// <param name="x1">The first bit set.</param>
+        /// <param name="x2">The second bit set.</param>
+        /// <returns>The union of <paramref name="x1"/> and <paramref name="x2"/>.</returns>
         public BitSet Union(in BitSet x1, in BitSet x2)
         {
             var data = x1._data | x2._data;
@@ -17,6 +24,13 @@ namespace BitArrayNeo
             return new BitSet(data, extra);
         }
 
+        /// <summary>
+        /// Returns a <see cref="BitSet"/> whose elements
+        /// exist in both of the two given bit sets.
+        /// </summary>
+        /// <param name="x1">The first bit set.</param>
+        /// <param name="x2">The second bit set.</param>
+        /// <returns>The intersection of <paramref name="x1"/> and <paramref name="x2"/>.</returns>
         public BitSet Intersect(in BitSet x1, in BitSet x2)
         {
             var data = x1._data & x2._data;
@@ -42,6 +56,12 @@ namespace BitArrayNeo
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="BitSet"/> whose elements
+        /// exist in either bit set of the given sequence.
+        /// </summary>
+        /// <param name="xs">The sequence of bit sets to unite.</param>
+        /// <returns>The union of the bit sets in <paramref name="xs"/>.</returns>
         public BitSet UnionMany(IEnumerable<BitSet> xs)
         {
             var sets = xs.ToList();
@@ -64,6 +84,13 @@ namespace BitArrayNeo
             return new BitSet(data, extra);
         }
 
+        /// <summary>
+        /// Returns a <see cref="BitSet"/> whose elements
+        /// exist in all bit sets of the given sequence.
+        /// </summary>
+        /// <param name="xs">The sequence of bit sets to intersect.</param>
+        /// <returns>The intersection of the bit sets in <paramref name="xs"/>.</returns>
+        /// <exception cref="ArgumentException"><paramref name="xs"/> is empty.</exception>
         public BitSet IntersectMany(IEnumerable<BitSet> xs)
         {
             var sets = xs.ToList();

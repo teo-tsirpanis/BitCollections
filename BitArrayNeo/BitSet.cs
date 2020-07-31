@@ -1,14 +1,20 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BitArrayNeo
 {
+    /// <summary>
+    /// An immutable set of bit values.
+    /// </summary>
     [PublicAPI]
     public readonly partial struct BitSet : IEquatable<BitSet>, IComparable<BitSet>, IComparable, IEnumerable<int>
     {
+        // We don't allocate for the first 64 bits.
         private readonly ulong _data;
+        // The bits after the first 64.
+        // Zeroes at the beginning have to be trimmed.
         private readonly ulong[] _extra;
 
         private static readonly ulong[] _emptyArray =
@@ -30,6 +36,13 @@ namespace BitArrayNeo
             return length == 0 ? _emptyArray : new ulong[length];
         }
 
+        /// <summary>
+        /// Creates a <see cref="BitSet"/> with only a single element.
+        /// </summary>
+        /// <param name="x">The only element to be included.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="x"/> is negative.</exception>
+        /// <seealso cref="Set"/>
         public static BitSet Singleton(int x)
         {
             if (x < 0)
@@ -43,6 +56,13 @@ namespace BitArrayNeo
             return new BitSet(0, extra);
         }
 
+        /// <summary>
+        /// Creates a <see cref="BitSet"/> containing the given elements.
+        /// </summary>
+        /// <remarks>Duplicate values are ignored.</remarks>
+        /// <param name="numbers">The numbers to include.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// One of the <paramref name="numbers"/> is negative.</exception>
         public BitSet(IEnumerable<int> numbers)
         {
             if (numbers is BitSet bs)
@@ -51,6 +71,8 @@ namespace BitArrayNeo
                 return;
             }
 
+            // We use ToList to avoid resizing the resulting
+            // array to precisely fit the elements.
             var xs = numbers.ToList();
             xs.Sort();
             if (xs.Count == 0)
@@ -75,10 +97,22 @@ namespace BitArrayNeo
             }
         }
 
+        /// <summary>
+        /// An empty <see cref="BitSet"/>.
+        /// </summary>
         public static ref readonly BitSet Empty => ref _empty;
 
+        /// <summary>
+        /// Whether this <see cref="BitSet"/> is empty.
+        /// </summary>
         public bool IsEmpty => _data == 0 && (_extra == null || _extra.Length == 0);
 
+        /// <summary>
+        /// Checks whether the bit with the given index is present.
+        /// </summary>
+        /// <remarks>If <paramref name="x"/> is negative, an exception
+        /// will not be thrown; the result will simply be <see langword="false"/>.</remarks>
+        /// <param name="x">The bit index to check.</param>
         public bool this[int x]
         {
             get
@@ -90,6 +124,15 @@ namespace BitArrayNeo
             }
         }
 
+        /// <summary>
+        /// Changes a single bit of a <see cref="BitSet"/>.
+        /// </summary>
+        /// <param name="i">The bit index to check</param>
+        /// <param name="val">The bit's new value.</param>
+        /// <returns>A <see cref="BitSet"/> whose <paramref name="i"/>th
+        /// bit set to <paramref name="val"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="i"/> is negative.</exception>
         public BitSet Set(int i, bool val)
         {
             if (i < 0)

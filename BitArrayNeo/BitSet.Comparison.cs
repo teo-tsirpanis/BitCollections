@@ -17,14 +17,23 @@ namespace BitArrayNeo
             return x != 0 ? x : x1._data.CompareTo(x2._data);
         }
 
+        /// <inheritdoc/>
         public bool Equals(BitSet other) => AreEqual(in this, in other);
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is BitSet x && Equals(x);
 
+        /// <summary>
+        /// The implementation of the equality operator.
+        /// </summary>
         public static bool operator ==(in BitSet x1, in BitSet x2) => AreEqual(in x1, in x2);
 
+        /// <summary>
+        /// The implementation of the inequality operator.
+        /// </summary>
         public static bool operator !=(in BitSet x1, in BitSet x2) => !(x1 == x2);
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
 #if !NET45
@@ -43,8 +52,10 @@ namespace BitArrayNeo
 #endif
         }
 
+        /// <inheritdoc/>
         public int CompareTo(BitSet other) => Compare(in this, in other);
 
+        /// <inheritdoc/>
         int IComparable.CompareTo(object? obj) =>
             obj != null ? CompareTo((BitSet) obj) : throw new ArgumentNullException(nameof(obj));
     }
