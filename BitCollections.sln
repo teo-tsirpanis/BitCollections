@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitCollections", "BitCollections\BitCollections.csproj", "{880CD4A9-7D6D-4B97-B846-9482C5A2778A}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BitCollections.Tests", "BitCollections.Tests\BitCollections.Tests.fsproj", "{F35F1645-2C07-42E3-8A6A-E39089278CB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{880CD4A9-7D6D-4B97-B846-9482C5A2778A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{880CD4A9-7D6D-4B97-B846-9482C5A2778A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{880CD4A9-7D6D-4B97-B846-9482C5A2778A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F35F1645-2C07-42E3-8A6A-E39089278CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F35F1645-2C07-42E3-8A6A-E39089278CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F35F1645-2C07-42E3-8A6A-E39089278CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F35F1645-2C07-42E3-8A6A-E39089278CB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
