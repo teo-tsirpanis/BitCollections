@@ -1,6 +1,6 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitArrayNeo", "BitArrayNeo\BitArrayNeo.csproj", "{880CD4A9-7D6D-4B97-B846-9482C5A2778A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitCollections", "BitCollections\BitCollections.csproj", "{880CD4A9-7D6D-4B97-B846-9482C5A2778A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

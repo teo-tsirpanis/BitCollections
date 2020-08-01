@@ -1,6 +1,6 @@
 using System;
 
-namespace BitArrayNeo
+namespace BitCollections
 {
     public partial struct BitSet
     {
@@ -57,6 +57,11 @@ namespace BitArrayNeo
 
         /// <inheritdoc/>
         int IComparable.CompareTo(object? obj) =>
-            obj != null ? CompareTo((BitSet) obj) : throw new ArgumentNullException(nameof(obj));
+            obj switch
+            {
+                null => 1,
+                BitSet bs => Compare(in this, in bs),
+                _ => String.CompareOrdinal(nameof(BitSet), obj.GetType().Name)
+            };
     }
 }

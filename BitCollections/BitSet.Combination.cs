@@ -3,11 +3,12 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+
 #if NETCOREAPP3_1
 using System.Runtime.Intrinsics.X86;
 #endif
 
-namespace BitArrayNeo
+namespace BitCollections
 {
     public partial struct BitSet
     {

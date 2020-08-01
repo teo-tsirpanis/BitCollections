@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
-namespace BitArrayNeo
+namespace BitCollections
 {
     /// <summary>
     /// An immutable set of bit values.
