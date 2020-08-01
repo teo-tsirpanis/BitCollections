@@ -23,16 +23,6 @@ namespace BitCollections
         /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is BitSet x && Equals(x);
 
-        /// <summary>
-        /// The implementation of the equality operator.
-        /// </summary>
-        public static bool operator ==(in BitSet x1, in BitSet x2) => AreEqual(in x1, in x2);
-
-        /// <summary>
-        /// The implementation of the inequality operator.
-        /// </summary>
-        public static bool operator !=(in BitSet x1, in BitSet x2) => !(x1 == x2);
-
         /// <inheritdoc/>
         public override int GetHashCode()
         {

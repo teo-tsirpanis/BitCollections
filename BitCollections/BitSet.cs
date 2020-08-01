@@ -25,7 +25,7 @@ namespace BitCollections
 #endif
         private static readonly BitSet _empty = new BitSet(0, NewArray(0));
 
-        private BitSet(ulong data, ulong[] extra)
+        internal BitSet(ulong data, ulong[] extra)
         {
             _data = data;
             _extra = extra;
@@ -119,8 +119,8 @@ namespace BitCollections
             {
                 if (x < 0) return false;
                 if (x < 64) return (_data & (1ul << x)) != 0;
-                var idx = Math.DivRem(x, 64, out var ofs);
-                return idx < _extra.Length && (_extra[idx - 1] & (1ul << ofs)) != 0;
+                var idx = Math.DivRem(x, 64, out var ofs) - 1;
+                return idx < _extra.Length && (_extra[idx] & (1ul << ofs)) != 0;
             }
         }
 

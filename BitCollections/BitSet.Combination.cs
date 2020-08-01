@@ -181,23 +181,5 @@ namespace BitCollections
                 ArrayPool<ulong>.Shared.Return(extraBuffer);
             }
         }
-
-        /// <summary>
-        /// An alias for <see cref="Union"/>.
-        /// </summary>
-        /// <seealso cref="Union"/>
-        public static BitSet operator |(in BitSet x1, in BitSet x2) => Union(in x1, in x2);
-
-        /// <summary>
-        /// An alias for <see cref="Intersect"/>.
-        /// </summary>
-        /// <seealso cref="Intersect"/>
-        public static BitSet operator &(in BitSet x1, in BitSet x2) => Intersect(in x1, in x2);
-
-        /// <summary>
-        /// An alias for <see cref="Difference"/>.
-        /// </summary>
-        /// <seealso cref="Difference"/>
-        public static BitSet operator -(in BitSet x1, in BitSet x2) => x1.Difference(in x2);
     }
 }
