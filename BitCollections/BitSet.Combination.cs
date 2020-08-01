@@ -25,7 +25,7 @@ namespace BitCollections
             var extra = NewArray(Math.Max(x1._extra.Length, x2._extra.Length));
             Array.Copy(x1._extra, extra, x1._extra.Length);
             for (int i = 0; i < x2._extra.Length; i++)
-                extra[i] &= x2._extra[i];
+                extra[i] |= x2._extra[i];
             return new BitSet(data, extra);
         }
 
@@ -44,7 +44,7 @@ namespace BitCollections
             var extraBuffer = ArrayPool<ulong>.Shared.Rent(extraLength);
             try
             {
-                Array.Copy(x1._extra, extraBuffer, x1._extra.Length);
+                Array.Copy(x1._extra, extraBuffer, extraLength);
                 var extraLengthTrimmed = 0;
                 for (int i = 0; i < extraLength; i++)
                 {
@@ -123,7 +123,7 @@ namespace BitCollections
                 }
 
                 var extraLengthTrimmed = extraLength;
-                while (extraLengthTrimmed >= 0 && extraBuffer[extraLengthTrimmed - 1] == 0) extraLengthTrimmed--;
+                while (extraLengthTrimmed > 0 && extraBuffer[extraLengthTrimmed - 1] == 0) extraLengthTrimmed--;
 
                 var extra = new ReadOnlySpan<ulong>(extraBuffer, 0, extraLengthTrimmed).ToArray();
                 return new BitSet(data, extra);
@@ -139,7 +139,9 @@ namespace BitCollections
         {
 #if NETCOREAPP3_1
             if (Bmi1.X64.IsSupported)
-                return Bmi1.X64.AndNot(x1, x2);
+                // In the BMI instruction, it is the
+                // first parameter that gets negated.
+                return Bmi1.X64.AndNot(x2, x1);
 #endif
             return x1 & ~ x2;
         }
@@ -153,13 +155,13 @@ namespace BitCollections
         public BitSet Difference(in BitSet x)
         {
             var data = AndNot(_data, x._data);
-            var extraLength = Math.Min(_extra.Length, x._extra.Length);
-            if (extraLength == 0) return new BitSet(data, _emptyArray);
-            var extraBuffer = ArrayPool<ulong>.Shared.Rent(extraLength);
+            // This function cannot make the vector any larger.
+            var extraBuffer = ArrayPool<ulong>.Shared.Rent(_extra.Length);
             try
             {
                 Array.Copy(_extra, extraBuffer, _extra.Length);
 
+                var extraLength = Math.Min(_extra.Length, x._extra.Length);
                 var extraLengthTrimmed = 0;
                 for (int i = 0; i < extraLength; i++)
                 {
@@ -168,6 +170,9 @@ namespace BitCollections
                     extraBuffer[i] = cell;
                 }
 
+                // If the parameter is less than this object, there are non-zero
+                // cells at the end, which means that we cannot trim the extra.
+                if (x._extra.Length < _extra.Length) extraLengthTrimmed = _extra.Length;
                 var extra = new ReadOnlySpan<ulong>(extraBuffer, 0, extraLengthTrimmed).ToArray();
                 return new BitSet(data, extra);
             }

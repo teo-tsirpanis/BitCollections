@@ -1,4 +1,4 @@
-[<FsCheck.Xunit.Properties(Arbitrary = [|typeof<BitCollections.Tests.Generators>|], MaxTest = 10_000, EndSize = 100_000)>]
+[<FsCheck.Xunit.Properties(Arbitrary = [|typeof<BitCollections.Tests.Generators>|], MaxTest = 500, EndSize = 10_000)>]
 module BitCollections.Tests.BitSetTests
 
 open BitCollections
@@ -38,7 +38,7 @@ let ``The difference of two BitSets works`` (x1: BitSet) x2 =
         Set.difference (set x1) (set x2)
         |> BitSet
     let direct = x1.Difference(&x2)
-    Assert.StrictEqual(indirect, direct)
+    Assert.Equal<BitSet>(indirect, direct)
 
 [<Property>]
 let ``The intersection of two BitSets works`` x1 x2 =
