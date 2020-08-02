@@ -50,9 +50,9 @@ namespace BitCollections
             if (x < 64)
                 return new BitSet(1ul << x, _emptyArray);
 
-            var idx = Math.DivRem(x, 64, out var ofs);
+            var idx = x / 64;
             var extra = NewArray(idx);
-            extra[idx - 1] = 1ul << ofs;
+            extra[idx - 1] = 1ul << x;
             return new BitSet(0, extra);
         }
 
@@ -91,8 +91,8 @@ namespace BitCollections
                     _data |= 1ul << i;
                 else
                 {
-                    var idx = Math.DivRem(i, 64, out var ofs);
-                    _extra[idx - 1] |= 1ul << ofs;
+                    var idx = i / 64 - 1;
+                    _extra[idx] |= 1ul << i;
                 }
             }
         }
@@ -119,8 +119,8 @@ namespace BitCollections
             {
                 if (x < 0) return false;
                 if (x < 64) return (_data & (1ul << x)) != 0;
-                var idx = Math.DivRem(x, 64, out var ofs) - 1;
-                return idx < _extra.Length && (_extra[idx] & (1ul << ofs)) != 0;
+                var idx = x / 64 - 1;
+                return idx < _extra.Length && (_extra[idx] & (1ul << x)) != 0;
             }
         }
 
@@ -139,13 +139,14 @@ namespace BitCollections
                 throw new ArgumentOutOfRangeException(nameof(i), i, "BitSets cannot store negative values.");
             if (this[i] == val)
                 return this;
+            var mask = 1ul << i;
             if (i < 64)
-                return new BitSet(val ? _data | (1ul << i) : _data & ~(1ul << i), _extra);
-            var idx = Math.DivRem(i, 64, out var ofs);
+                return new BitSet(val ? _data | mask : _data & ~mask, _extra);
+            var idx = i / 64;
             var extra = NewArray(Math.Max(_extra.Length, idx));
             Array.Copy(_extra, extra, _extra.Length);
             ref ulong cell = ref extra[idx - 1];
-            cell = val ? cell | (1ul << ofs) : cell & ~(1ul << ofs);
+            cell = val ? cell | mask : cell & ~mask;
             return new BitSet(_data, extra);
         }
     }
