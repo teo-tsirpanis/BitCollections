@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace BitCollections
@@ -27,6 +29,7 @@ namespace BitCollections
 
         internal BitSet(ulong data, ulong[] extra)
         {
+            Debug.Assert(extra.Length == 0 || extra[extra.Length - 1] != 0, "The bit set's extra array has zeroes at the end.");
             _data = data;
             _extra = extra;
         }
@@ -115,6 +118,7 @@ namespace BitCollections
         /// <param name="x">The bit index to check.</param>
         public bool this[int x]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 if (x < 0) return false;
