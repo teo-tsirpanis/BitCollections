@@ -94,5 +94,15 @@ namespace BitCollections
             }
             return changed;
         }
+
+        /// <summary>
+        /// Inverts the bits of <paramref name="x"/>.
+        /// </summary>
+        /// <param name="x">The bits to invert.</param>
+        internal static void Not(Span<ulong> x)
+        {
+            for (int i = 0; i < x.Length; i++)
+                x[i] = ~x[i];
+        }
     }
 }

@@ -21,6 +21,9 @@ namespace BitCollections
         public bool Equals(BitSet other) => AreEqual(in this, in other);
 
         /// <inheritdoc/>
+        public bool Equals(BitArrayNeo? other) => other != null && other.Equals(this);
+
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is BitSet x && Equals(x);
 
         /// <inheritdoc/>

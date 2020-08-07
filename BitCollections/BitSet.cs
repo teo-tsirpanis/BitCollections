@@ -11,10 +11,12 @@ namespace BitCollections
     /// An immutable set of bit values.
     /// </summary>
     [PublicAPI]
-    public readonly partial struct BitSet : IEquatable<BitSet>, IComparable<BitSet>, IComparable, IEnumerable<int>
+    public readonly partial struct BitSet : IEquatable<BitSet>, IEquatable<BitArrayNeo>, IComparable<BitSet>,
+        IComparable, IEnumerable<int>
     {
         // We don't allocate for the first 64 bits.
         private readonly ulong _data;
+
         // The bits after the first 64.
         // Zeroes at the beginning have to be trimmed.
         private readonly ulong[] _extra;
@@ -29,10 +31,14 @@ namespace BitCollections
 
         internal BitSet(ulong data, ulong[] extra)
         {
-            Debug.Assert(extra.Length == 0 || extra[extra.Length - 1] != 0, "The bit set's extra array has zeroes at the end.");
+            Debug.Assert(extra.Length == 0 || extra[extra.Length - 1] != 0,
+                "The bit set's extra array has zeroes at the end.");
             _data = data;
             _extra = extra;
         }
+
+        internal ulong Data => _data;
+        internal ReadOnlySpan<ulong> Extra => new ReadOnlySpan<ulong>(_extra);
 
         private static ulong[] NewArray(int length)
         {
