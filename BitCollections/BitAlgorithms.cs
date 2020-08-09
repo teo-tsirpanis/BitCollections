@@ -16,6 +16,9 @@ namespace BitCollections
             return x.Slice(0, lenTrimmed);
         }
 
+        internal static ulong GetFirstBitsOn(int count) =>
+            count >= 64 ? ulong.MaxValue : (1ul << count) - 1;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static ulong AndNotSingle(ulong x1, ulong x2)
         {
@@ -52,6 +55,7 @@ namespace BitCollections
                 changed |= cell != newValue;
                 cell = newValue;
             }
+
             return changed;
         }
 
@@ -72,6 +76,7 @@ namespace BitCollections
                 changed |= cell != newValue;
                 cell = newValue;
             }
+
             return changed;
         }
 
@@ -92,6 +97,7 @@ namespace BitCollections
                 changed |= cell != newValue;
                 cell = newValue;
             }
+
             return changed;
         }
 

@@ -9,7 +9,6 @@ open global.Xunit
 
 let (|||) x1 x2 = BitSet.Union(&x1, &x2)
 let (&&&) x1 x2 = BitSet.Intersect(&x1, &x2)
-let (-) (x1: BitSet) x2 = x1.Difference(&x2)
 
 [<Property>]
 let ``A BitSet can be reliably round-tripped into an integer sequence`` x =
@@ -64,12 +63,12 @@ let ``The intersection of no BitSets raises an exception``() =
     Assert.Throws<ArgumentException>(Action(fun () -> BitSet.IntersectMany Seq.empty |> ignore))
 
 [<Property>]
-let ``The difference of two BitSets has the empty one as the identity element`` x =
-    Assert.Equal<BitSet>(x, x - BitSet.Empty)
+let ``The difference of two BitSets has the empty one as the identity element`` (x: BitSet) =
+    Assert.Equal<BitSet>(x, x.Difference(&BitSet.Empty))
 
 [<Property>]
-let ``The difference a BitSet with itself results in an empty BitSet`` x =
-    Assert.Equal<BitSet>(BitSet.Empty, x - x)
+let ``The difference a BitSet with itself results in an empty BitSet`` (x: BitSet) =
+    Assert.Equal<BitSet>(BitSet.Empty, x.Difference(&x))
 
 [<Property>]
 let ``Singleton returns a BitSet with only one element`` idx =
@@ -82,3 +81,18 @@ let ``Singleton returns a BitSet with only one element`` idx =
 let ``Unsetting the only bit of a BitSet correctly trims the extra array`` (NonNegativeInt x) =
     let bs = BitSet.Singleton x
     bs.Set(x, false) |> ignore
+
+[<Property>]
+let ``A universe BitSet contains the elements it should`` count =
+    if count < 0 then
+        Assert.Throws<ArgumentOutOfRangeException>(Action(fun () -> BitSet.Universe count |> ignore)) |> ignore
+    else
+        let universe = BitSet.Universe count
+        Assert.Equal<_ seq>({0 .. count - 1}, universe)
+
+[<Property>]
+let ``The complement of a BitSet has no shared elements with itself`` bs =
+    let universe = BitSet.Universe(Seq.max bs)
+    let bsComplement = universe.Difference(&bs)
+    let intersection = BitSet.Intersect(&bs, &bsComplement)
+    Assert.Empty intersection

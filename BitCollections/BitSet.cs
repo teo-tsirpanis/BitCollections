@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -64,6 +64,32 @@ namespace BitCollections
             var extra = NewArray(idx);
             extra[idx - 1] = 1ul << x;
             return new BitSet(0, extra);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BitSet"/> that contains all numbers
+        /// between 0 and <paramref name="count"/> minus one, inclusive.
+        /// </summary>
+        /// <param name="count">The cardinality of the returned bit set.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="count"/> is negative.</exception>
+        public static BitSet Universe(int count)
+        {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count), count, "BitSets cannot store negative values.");
+            if (count <= 64)
+                return new BitSet(BitAlgorithms.GetFirstBitsOn(count), _emptyArray);
+
+            // We want to find the position of the last
+            // bit, not the position of the bit count.
+            var fieldCount = Math.DivRem(count - 1, 64, out var remainingBits);
+            // The reduced count is now brought back.
+            remainingBits++;
+            var extra = NewArray(fieldCount);
+            extra.AsSpan().Fill(ulong.MaxValue);
+            extra[extra.Length - 1] = BitAlgorithms.GetFirstBitsOn(remainingBits);
+
+            return new BitSet(ulong.MaxValue, extra);
         }
 
         /// <summary>
