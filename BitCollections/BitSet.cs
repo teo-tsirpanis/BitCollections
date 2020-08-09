@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -153,11 +154,22 @@ namespace BitCollections
             if (i < 64)
                 return new BitSet(val ? _data | mask : _data & ~mask, _extra);
             var idx = i / 64;
-            var extra = NewArray(Math.Max(_extra.Length, idx));
-            Array.Copy(_extra, extra, _extra.Length);
-            ref ulong cell = ref extra[idx - 1];
-            cell = val ? cell | mask : cell & ~mask;
-            return new BitSet(_data, extra);
+            var extraLength = Math.Max(_extra.Length, idx);
+            var extraBuffer = ArrayPool<ulong>.Shared.Rent(extraLength);
+            try
+            {
+                Array.Copy(_extra, extraBuffer, _extra.Length);
+                ref var cell = ref extraBuffer[idx - 1];
+                cell = val ? cell | mask : cell & ~mask;
+
+                var extra = new ReadOnlySpan<ulong>(extraBuffer, 0, extraLength);
+                extra = BitAlgorithms.TrimTrailingZeroes(extra);
+                return new BitSet(_data, extra.ToArray());
+            }
+            finally
+            {
+                ArrayPool<ulong>.Shared.Return(extraBuffer);
+            }
         }
     }
 }

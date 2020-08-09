@@ -3,6 +3,7 @@ module BitCollections.Tests.BitSetTests
 
 open System
 open BitCollections
+open FsCheck
 open FsCheck.Xunit
 open global.Xunit
 
@@ -76,3 +77,8 @@ let ``Singleton returns a BitSet with only one element`` idx =
         Assert.Throws<ArgumentOutOfRangeException>(Action(fun () -> BitSet.Singleton idx |> ignore)) |> ignore
     else
         Assert.Single(BitSet.Singleton idx) |> ignore
+
+[<Property>]
+let ``Unsetting the only bit of a BitSet correctly trims the extra array`` (NonNegativeInt x) =
+    let bs = BitSet.Singleton x
+    bs.Set(x, false) |> ignore
