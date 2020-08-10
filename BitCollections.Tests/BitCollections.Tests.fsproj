@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Generators.fs" />
     <Compile Include="BitSetTests.fs" />
+    <Compile Include="BitArrayNeoTests.fs" />
   </ItemGroup>
 
   <ItemGroup>
