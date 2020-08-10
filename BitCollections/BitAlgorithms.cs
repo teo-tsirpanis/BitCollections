@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
+
 #if NETCOREAPP3_1
 using System.Runtime.Intrinsics.X86;
 
@@ -109,6 +111,17 @@ namespace BitCollections
         {
             for (int i = 0; i < x.Length; i++)
                 x[i] = ~x[i];
+        }
+
+        internal static string FormatBitArray(ulong first, ReadOnlySpan<ulong> rest)
+        {
+            var sb = new StringBuilder();
+            for (int i = rest.Length - 1; i >= 0; i--)
+            {
+                sb.Append(rest[i].ToString("x16")).Append('-');
+            }
+            sb.Append(first.ToString("X16"));
+            return sb.ToString();
         }
     }
 }

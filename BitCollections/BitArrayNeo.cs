@@ -10,7 +10,7 @@ namespace BitCollections
     /// is that the <see cref="BitArrayNeo"/>'s mutating methods returns whether
     /// the collection's content changed.</remarks>
     [PublicAPI]
-    public class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>
+    public class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable
     {
         private readonly ulong[] _data;
         private readonly int _bitCapacity;
@@ -28,6 +28,17 @@ namespace BitCollections
                 throw new ArgumentOutOfRangeException(nameof(bitCapacity));
             _bitCapacity = bitCapacity;
             _data = new ulong[bitCapacity == 0 ? 0 : bitCapacity / 64 + 1];
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BitArrayNeo"/> with the same
+        /// capacity and content of another <see cref="BitArrayNeo"/>.
+        /// </summary>
+        /// <param name="x">The bit array to clone.</param>
+        public BitArrayNeo(BitArrayNeo x)
+        {
+            _bitCapacity = x._bitCapacity;
+            _data = x._data.AsSpan().ToArray();
         }
 
         /// <summary>
@@ -170,9 +181,17 @@ namespace BitCollections
         /// <inheritdoc/>
         public bool Equals(BitSet other)
         {
-            return _data.Length == 0
-                ? other.IsEmpty
-                : _data[0] == other.Data && _data.AsSpan(1).SequenceEqual(other.Extra);
+            if (_data.Length == 0) return other.IsEmpty;
+            ReadOnlySpan<ulong> extra = _data.AsSpan(1);
+            extra = BitAlgorithms.TrimTrailingZeroes(extra);
+            return _data[0] == other.Data && extra.SequenceEqual(other.Extra);
         }
+
+        /// <inheritdoc/>
+        public override string ToString() =>
+            _data.Length == 0 ? string.Empty : BitAlgorithms.FormatBitArray(_data[0], _data.AsSpan(1));
+
+        /// <inheritdoc/>
+        object ICloneable.Clone() => new BitArrayNeo(this);
     }
 }

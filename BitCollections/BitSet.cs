@@ -197,5 +197,8 @@ namespace BitCollections
                 ArrayPool<ulong>.Shared.Return(extraBuffer);
             }
         }
+
+        /// <inheritdoc/>
+        public override string ToString() => BitAlgorithms.FormatBitArray(_data, Extra);
     }
 }
