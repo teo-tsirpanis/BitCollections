@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace BitCollections
@@ -11,7 +12,7 @@ namespace BitCollections
     /// the collection's content changed. Other members can be requested by opening
     /// a GitHub issue.</remarks>
     [PublicAPI]
-    public class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable
+    public partial class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable, IEnumerable<int>
     {
         private readonly ulong[] _data;
         private readonly int _bitCapacity;

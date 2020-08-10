@@ -2,11 +2,11 @@
 
 BitCollections is a library that provides efficient collections storing bit values. It provides two types:
 
-* `BitSet`: An immutable struct, implementing `IEnumerable<int>` for the active bit indices, allocation-free when bit indices less than 64 are stored.
+* `BitSet`: An immutable struct, allocation-free when bit indices less than 64 are stored.
 
 * `BitArrayNeo`: A mutable class, has a simpler API than `System.Collections.BitArray`, its modification methods return whether the collection changed.
 
-These two types can be converted to each other.
+These two types can be converted to each other. Both implement `IEnumerable<int>` for their active bit indices.
 
 ## Why not use BitCollections?
 

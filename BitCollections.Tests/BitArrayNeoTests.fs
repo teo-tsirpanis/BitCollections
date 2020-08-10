@@ -73,12 +73,19 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
         ]}
 
 [<Property>]
-let ``A BitSet can be reliably round-tripped into a BitArrayNeo`` (bs: BitSet) =
+let ``A BitArrayNeo can be reliably round-tripped into a BitSet`` (bs: BitSet) =
     let ban = BitArrayNeo bs
     let bs' = ban.ToBitSet()
     let ban' = BitArrayNeo bs'
     Assert.Equal<BitSet>(bs, bs')
-    Assert.Equal(ban, ban')
+    Assert.Equal<BitArrayNeo>(ban, ban')
+
+[<Property>]
+let ``A BitArrayNeo works as an IEnumerable`` (bs: BitSet) =
+    let ban = BitArrayNeo bs
+    // Xunit has problems with comparing
+    // sequences of a different type.
+    Assert.Equal<_ seq>(Seq.readonly bs, Seq.readonly ban)
 
 [<Property>]
 let ``Operations on BitSets and BitArrayNeoes match in their behavior`` bitCapacity =
