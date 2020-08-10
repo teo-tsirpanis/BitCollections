@@ -15,7 +15,8 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
                 let bs' = ban'.ToBitSet()
                 BitSet.Union(&bs, &bs')
             member _.Check (ban, bs) =
-                ban.Or ban' |> ignore
+                let banOld = BitArrayNeo ban
+                Assert.NotEqual(ban.Or ban', banOld.Equals ban)
                 ban.Equals bs |> Prop.ofTestable
             override _.ToString() = sprintf "or %O" ban'}
     let _and (ban': BitArrayNeo) = {
@@ -24,7 +25,8 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
                 let bs' = ban'.ToBitSet()
                 BitSet.Intersect(&bs, &bs')
             member _.Check (ban, bs) =
-                ban.And ban' |> ignore
+                let banOld = BitArrayNeo ban
+                Assert.NotEqual(ban.And ban', banOld.Equals ban)
                 ban.Equals bs |> Prop.ofTestable
             override _.ToString() = sprintf "and %O" ban'}
     let _xor (ban': BitArrayNeo) = {
@@ -33,7 +35,8 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
                 let bs' = ban'.ToBitSet()
                 BitSet.SymmetricDifference(&bs, &bs')
             member _.Check (ban, bs) =
-                ban.Xor ban' |> ignore
+                let banOld = BitArrayNeo ban
+                Assert.NotEqual(ban.Xor ban', banOld.Equals ban)
                 ban.Equals bs |> Prop.ofTestable
             override _.ToString() = sprintf "xor %O" ban'}
     let _not = {
@@ -62,9 +65,9 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
     {new Machine<BitArrayNeo,BitSet>(15) with
         member _.Setup = generator |> Gen.map create |> Arb.fromGen
         member _.Next _ = Gen.oneof [
-            generator |> Gen.map _or
-            generator |> Gen.map _and
-            generator |> Gen.map _xor
+            Gen.map _or generator
+            Gen.map _and generator
+            Gen.map _xor generator
             Gen.constant _not
             Gen.choose(0, bitCapacity - 1) |> Gen.map flip
         ]}

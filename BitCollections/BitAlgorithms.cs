@@ -13,9 +13,13 @@ namespace BitCollections
     {
         internal static ReadOnlySpan<ulong> TrimTrailingZeroes(ReadOnlySpan<ulong> x)
         {
+#if NETCOREAPP
+            return x.TrimEnd(0ul);
+#else
             var lenTrimmed = x.Length;
             while (lenTrimmed > 0 && x[lenTrimmed - 1] == 0) lenTrimmed--;
             return x.Slice(0, lenTrimmed);
+#endif
         }
 
         internal static ulong GetFirstBitsOn(int count) =>
