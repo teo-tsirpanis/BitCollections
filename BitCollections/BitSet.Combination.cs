@@ -39,6 +39,7 @@ namespace BitCollections
             var extraBuffer = ArrayPool<ulong>.Shared.Rent(extraLength);
             try
             {
+                extraBuffer.AsSpan(0, extraLength).Fill(ulong.MaxValue);
                 Array.Copy(x1._extra, extraBuffer, extraLength);
                 BitAlgorithms.And(new Span<ulong>(extraBuffer, 0, extraLength),
                     new ReadOnlySpan<ulong>(x2._extra, 0, extraLength));
@@ -106,7 +107,7 @@ namespace BitCollections
             var extraBuffer = ArrayPool<ulong>.Shared.Rent(extraLength);
             try
             {
-                extraBuffer.AsSpan().Fill(ulong.MaxValue);
+                extraBuffer.AsSpan(0, extraLength).Fill(ulong.MaxValue);
                 for (int i = 0; i < sets.Count; i++)
                 {
                     var x = sets[i]._extra;
@@ -142,6 +143,35 @@ namespace BitCollections
                 var extraLength = Math.Min(_extra.Length, x._extra.Length);
                 _ = BitAlgorithms.AndNot(extraBuffer.AsSpan(0, extraLength), x._extra.AsSpan(0, extraLength));
                 var extra = new ReadOnlySpan<ulong>(extraBuffer, 0, _extra.Length);
+                extra = BitAlgorithms.TrimTrailingZeroes(extra);
+                return new BitSet(data, extra.ToArray());
+            }
+            finally
+            {
+                ArrayPool<ulong>.Shared.Return(extraBuffer);
+            }
+        }
+
+        /// <summary>
+        /// Returns a <see cref="BitSet"/> whose elements
+        /// exist only one of the two given bit sets.
+        /// </summary>
+        /// <param name="x1">The first bit set.</param>
+        /// <param name="x2">The second bit set.</param>
+        /// <returns>The symmetric difference of <paramref name="x1"/>
+        /// and <paramref name="x2"/>.</returns>
+        public static BitSet SymmetricDifference(in BitSet x1, in BitSet x2)
+        {
+            var data = x1._data ^ x2._data;
+            var extraLength = Math.Max(x1._extra.Length, x2._extra.Length);
+            var extraBuffer = ArrayPool<ulong>.Shared.Rent(extraLength);
+            try
+            {
+                extraBuffer.AsSpan(0, extraLength).Fill(0);
+                Array.Copy(x1._extra, extraBuffer, x1._extra.Length);
+
+                _ = BitAlgorithms.Xor(extraBuffer.AsSpan(0, x2._extra.Length), x2._extra.AsSpan());
+                var extra = new ReadOnlySpan<ulong>(extraBuffer, 0, extraLength);
                 extra = BitAlgorithms.TrimTrailingZeroes(extra);
                 return new BitSet(data, extra.ToArray());
             }

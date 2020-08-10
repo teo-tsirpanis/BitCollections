@@ -58,7 +58,7 @@ namespace BitCollections
             throw new ArgumentOutOfRangeException(nameof(x), x, "BitArrayNeoes cannot store negative values.");
 
         private static void ThrowDifferentCapacity([InvokerParameterName] string paramName) =>
-            throw new ArgumentException("The BitArrayNeoes' length differ.", paramName);
+            throw new ArgumentException("The BitArrayNeoes' capacities differ.", paramName);
 
         /// <summary>
         /// Gets or sets individual bits in a <see cref="BitArrayNeo"/>.
@@ -111,7 +111,7 @@ namespace BitCollections
         }
 
         /// <summary>
-        /// Performs the bitwise OR between the bits of this
+        /// Performs a bitwise OR between the bits of this
         /// <see cref="BitArrayNeo"/> and <paramref name="x"/>,
         /// modifying the former.
         /// </summary>
@@ -126,7 +126,7 @@ namespace BitCollections
         }
 
         /// <summary>
-        /// Performs the bitwise AND between the bits of this
+        /// Performs a bitwise AND between the bits of this
         /// <see cref="BitArrayNeo"/> and <paramref name="x"/>,
         /// modifying the former.
         /// </summary>
@@ -138,6 +138,21 @@ namespace BitCollections
             if (_bitCapacity != x._bitCapacity)
                 ThrowDifferentCapacity(nameof(x));
             return BitAlgorithms.And(_data.AsSpan(), x._data.AsSpan());
+        }
+
+        /// <summary>
+        /// Performs a bitwise XOR between the bits of this
+        /// <see cref="BitArrayNeo"/> and <paramref name="x"/>,
+        /// modifying the former.
+        /// </summary>
+        /// <param name="x">The other bit array.</param>
+        /// <returns>Whether the content of this bit array actually changed.</returns>
+        /// <exception cref="ArgumentException">The bit arrays have different <see cref="BitCapacity"/>ies.</exception>
+        public bool Xor(BitArrayNeo x)
+        {
+            if (_bitCapacity != x._bitCapacity)
+                ThrowDifferentCapacity(nameof(x));
+            return BitAlgorithms.Xor(_data.AsSpan(), x._data.AsSpan());
         }
 
         /// <summary>

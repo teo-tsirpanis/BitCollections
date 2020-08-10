@@ -27,6 +27,15 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
                 ban.And ban' |> ignore
                 ban.Equals bs |> Prop.ofTestable
             override _.ToString() = sprintf "and %O" ban'}
+    let _xor (ban': BitArrayNeo) = {
+        new Operation<BitArrayNeo,BitSet>() with
+            member _.Run bs =
+                let bs' = ban'.ToBitSet()
+                BitSet.SymmetricDifference(&bs, &bs')
+            member _.Check (ban, bs) =
+                ban.Xor ban' |> ignore
+                ban.Equals bs |> Prop.ofTestable
+            override _.ToString() = sprintf "xor %O" ban'}
     let _not = {
         new Operation<BitArrayNeo,BitSet>() with
             member _.Run bs =
@@ -55,6 +64,7 @@ let bitSetEquivelanceMachine (PositiveInt bitCapacity) =
         member _.Next _ = Gen.oneof [
             generator |> Gen.map _or
             generator |> Gen.map _and
+            generator |> Gen.map _xor
             Gen.constant _not
             Gen.choose(0, bitCapacity - 1) |> Gen.map flip
         ]}

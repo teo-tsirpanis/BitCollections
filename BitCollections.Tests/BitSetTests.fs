@@ -71,6 +71,18 @@ let ``The difference a BitSet with itself results in an empty BitSet`` (x: BitSe
     Assert.Equal<BitSet>(BitSet.Empty, x.Difference(&x))
 
 [<Property>]
+let ``The symmetric difference of two BitSets is commutative`` x1 x2 =
+    Assert.Equal<BitSet>(BitSet.SymmetricDifference(&x1, &x2), BitSet.SymmetricDifference(&x2, &x1))
+
+[<Property>]
+let ``The symmetric difference of two BitSets has the empty one as the identity element`` (x: BitSet) =
+    Assert.Equal<BitSet>(x, BitSet.SymmetricDifference(&x, &BitSet.Empty))
+
+[<Property>]
+let ``The symmetric difference of a BitSet with itself results in an empty BitSet`` x =
+    Assert.Empty(BitSet.SymmetricDifference(&x, &x))
+
+[<Property>]
 let ``Singleton returns a BitSet with only one element`` idx =
     if idx < 0 then
         Assert.Throws<ArgumentOutOfRangeException>(Action(fun () -> BitSet.Singleton idx |> ignore)) |> ignore
