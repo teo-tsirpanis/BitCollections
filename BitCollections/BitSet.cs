@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright (c) 2020 Theodore Tsirpanis
+// 
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
