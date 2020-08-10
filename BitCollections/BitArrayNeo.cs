@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace BitCollections
@@ -11,7 +12,7 @@ namespace BitCollections
     /// is that the <see cref="BitArrayNeo"/>'s mutating methods returns whether
     /// the collection's content changed. Other members can be requested by opening
     /// a GitHub issue.</remarks>
-    [PublicAPI]
+    [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
     public partial class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable, IEnumerable<int>
     {
         private readonly ulong[] _data;

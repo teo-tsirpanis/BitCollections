@@ -11,7 +11,7 @@ namespace BitCollections
     /// <summary>
     /// An immutable set of bit values.
     /// </summary>
-    [PublicAPI]
+    [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
     public readonly partial struct BitSet : IEquatable<BitSet>, IEquatable<BitArrayNeo>, IComparable<BitSet>,
         IComparable, IEnumerable<int>
     {
