@@ -33,12 +33,8 @@ namespace BitCollections
             return x1 & ~ x2;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void CheckForSameLength(ReadOnlySpan<ulong> x1, ReadOnlySpan<ulong> x2)
-        {
-            if (x1.Length != x2.Length)
-                throw new ArgumentException("Spans have different length.");
-        }
+        private static void ThrowDifferentLength() =>
+            throw new ArgumentException("Spans have different length.");
 
         /// <summary>
         /// Calculates (<paramref name="dest"/> AND <paramref name="src"/>)
@@ -48,7 +44,8 @@ namespace BitCollections
         /// <returns>Whether the content of <paramref name="dest"/> changed.</returns>
         internal static bool And(Span<ulong> dest, ReadOnlySpan<ulong> src)
         {
-            CheckForSameLength(dest, src);
+            if (dest.Length != src.Length)
+                ThrowDifferentLength();
             var changed = false;
             for (int i = 0; i < dest.Length; i++)
             {
@@ -69,7 +66,8 @@ namespace BitCollections
         /// <returns>Whether the content of <paramref name="dest"/> changed.</returns>
         internal static bool Or(Span<ulong> dest, ReadOnlySpan<ulong> src)
         {
-            CheckForSameLength(dest, src);
+            if (dest.Length != src.Length)
+                ThrowDifferentLength();
             var changed = false;
             for (int i = 0; i < dest.Length; i++)
             {
@@ -90,7 +88,8 @@ namespace BitCollections
         /// <returns>Whether the content of <paramref name="dest"/> changed.</returns>
         internal static bool AndNot(Span<ulong> dest, ReadOnlySpan<ulong> src)
         {
-            CheckForSameLength(dest, src);
+            if (dest.Length != src.Length)
+                ThrowDifferentLength();
             var changed = false;
             for (int i = 0; i < dest.Length; i++)
             {

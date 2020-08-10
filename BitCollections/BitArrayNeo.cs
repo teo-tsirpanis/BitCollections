@@ -8,7 +8,8 @@ namespace BitCollections
     /// </summary>
     /// <remarks>Its difference from <see cref="System.Collections.BitArray"/>
     /// is that the <see cref="BitArrayNeo"/>'s mutating methods returns whether
-    /// the collection's content changed.</remarks>
+    /// the collection's content changed. Other members can be requested by opening
+    /// a GitHub issue.</remarks>
     [PublicAPI]
     public class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable
     {
@@ -53,6 +54,12 @@ namespace BitCollections
             _bitCapacity = _data.Length * 64;
         }
 
+        private static void ThrowNegativeValue(int x) =>
+            throw new ArgumentOutOfRangeException(nameof(x), x, "BitArrayNeoes cannot store negative values.");
+
+        private static void ThrowDifferentCapacity([InvokerParameterName] string paramName) =>
+            throw new ArgumentException("The BitArrayNeoes' length differ.", paramName);
+
         /// <summary>
         /// Gets or sets individual bits in a <see cref="BitArrayNeo"/>.
         /// </summary>
@@ -71,8 +78,7 @@ namespace BitCollections
 
             set
             {
-                if (x < 0)
-                    throw new ArgumentOutOfRangeException(nameof(x), x, "BitArrayNeoes cannot store negative values.");
+                if (x < 0) ThrowNegativeValue(x);
                 if (x >= _bitCapacity)
                     throw new ArgumentOutOfRangeException(nameof(x), x,
                         "Cannot store a value greater than the capacity of a BitArrayNeo.");
@@ -97,8 +103,7 @@ namespace BitCollections
         /// <paramref name="x"/> is negative or too large.</exception>
         public bool Set(int x, bool value)
         {
-            if (x < 0)
-                throw new ArgumentOutOfRangeException(nameof(x), x, "BitArrayNeoes cannot store negative values.");
+            if (x < 0) ThrowNegativeValue(x);
             if (this[x] == value)
                 return false;
             this[x] = value;
@@ -116,7 +121,7 @@ namespace BitCollections
         public bool Or(BitArrayNeo x)
         {
             if (_bitCapacity != x._bitCapacity)
-                throw new ArgumentException("The BitArrayNeoes' length differ", nameof(x));
+                ThrowDifferentCapacity(nameof(x));
             return BitAlgorithms.Or(_data.AsSpan(), x._data.AsSpan());
         }
 
@@ -131,7 +136,7 @@ namespace BitCollections
         public bool And(BitArrayNeo x)
         {
             if (_bitCapacity != x._bitCapacity)
-                throw new ArgumentException("The BitArrayNeoes' length differ", nameof(x));
+                ThrowDifferentCapacity(nameof(x));
             return BitAlgorithms.And(_data.AsSpan(), x._data.AsSpan());
         }
 

@@ -46,6 +46,9 @@ namespace BitCollections
             return length == 0 ? _emptyArray : new ulong[length];
         }
 
+        private static void ThrowNegativeValue([InvokerParameterName] string paramName, int x) =>
+            throw new ArgumentOutOfRangeException(paramName, x, "BitSets cannot store negative values");
+
         /// <summary>
         /// Creates a <see cref="BitSet"/> with only a single element.
         /// </summary>
@@ -55,8 +58,7 @@ namespace BitCollections
         /// <seealso cref="Set"/>
         public static BitSet Singleton(int x)
         {
-            if (x < 0)
-                throw new ArgumentOutOfRangeException(nameof(x), x, "BitSets cannot store negative values.");
+            if (x < 0) ThrowNegativeValue(nameof(x), x);
             if (x < 64)
                 return new BitSet(1ul << x, _emptyArray);
 
@@ -75,8 +77,7 @@ namespace BitCollections
         /// <paramref name="count"/> is negative.</exception>
         public static BitSet Universe(int count)
         {
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count), count, "BitSets cannot store negative values.");
+            if (count < 0) ThrowNegativeValue(nameof(count), count);
             if (count <= 64)
                 return new BitSet(BitAlgorithms.GetFirstBitsOn(count), _emptyArray);
 
@@ -121,8 +122,7 @@ namespace BitCollections
             _extra = NewArray(xs[xs.Count - 1] / 64);
             foreach (var i in xs)
             {
-                if (i < 0)
-                    throw new ArgumentOutOfRangeException(nameof(numbers), i, "BitSets cannot store negative values.");
+                if (i < 0) ThrowNegativeValue(nameof(numbers), i);
                 if (i < 64)
                     _data |= 1ul << i;
                 else
@@ -172,8 +172,7 @@ namespace BitCollections
         /// <paramref name="i"/> is negative.</exception>
         public BitSet Set(int i, bool val)
         {
-            if (i < 0)
-                throw new ArgumentOutOfRangeException(nameof(i), i, "BitSets cannot store negative values.");
+            if (i < 0) ThrowNegativeValue(nameof(i), i);
             if (this[i] == val)
                 return this;
             var mask = 1ul << i;
