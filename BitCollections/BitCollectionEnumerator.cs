@@ -9,67 +9,79 @@ using System.Collections.Generic;
 
 namespace BitCollections
 {
-        /// <summary>
-        /// An enumerator object over a <see cref="BitSet"/>'s indices of active bits.
-        /// </summary>
-        /// <seealso cref="BitSet.GetEnumerator"/>
-        public struct BitCollectionEnumerator : IEnumerator<int>
+    /// <summary>
+    /// An enumerator object over a bit collection's indices of active bits.
+    /// It can work with either a <see cref="BitSet"/> or a <see cref="BitArrayNeo"/>.
+    /// </summary>
+    public struct BitCollectionEnumerator
+    {
+        private readonly ulong[] _extra;
+        private int _nextItem;
+        private ulong _currentField;
+        private int _currentFieldIndex;
+
+        internal BitCollectionEnumerator(ulong first, ulong[] rest, int restStartIndex)
         {
-            private readonly ulong[] _extra;
-            private int _nextItem;
-            private ulong _currentField;
-            private int _currentFieldIndex;
+            _currentField = first;
+            _extra = rest;
+            _nextItem = -1;
+            _currentFieldIndex = restStartIndex - 1;
+        }
 
-            internal BitCollectionEnumerator(ulong first, ulong[] rest, int restStartIndex)
+        /// <summary>
+        /// Loads the next item of the collection.
+        /// </summary>
+        /// <returns>Whether such next item exists.</returns>
+        public bool MoveNext()
+        {
+            while (true)
             {
-                _currentField = first;
-                _extra = rest;
-                _nextItem = -1;
-                _currentFieldIndex = restStartIndex - 1;
-            }
-
-            /// <inheritdoc/>
-            public bool MoveNext()
-            {
-                while (true)
+                if (_currentField == 0)
                 {
-                    if (_currentField == 0)
-                    {
-                        if (_currentFieldIndex >= _extra.Length - 1)
-                            return false;
-                        _currentFieldIndex++;
-                        _currentField = _extra[_currentFieldIndex];
-                        // We set _nextItem to one number less than
-                        // the closest multiple of 64 that is bigger
-                        // than _nextItem.
-                        _nextItem = (_nextItem / 64 + 1) * 64 - 1;
-                    }
-                    else
-                    {
-                        _nextItem++;
-                        var isSet = _currentField % 2;
-                        _currentField /= 2;
-                        if (isSet == 1) return true;
-                    }
+                    if (_currentFieldIndex >= _extra.Length - 1)
+                        return false;
+                    _currentFieldIndex++;
+                    _currentField = _extra[_currentFieldIndex];
+                    // We set _nextItem to one number less than
+                    // the closest multiple of 64 that is bigger
+                    // than _nextItem.
+                    _nextItem = (_nextItem / 64 + 1) * 64 - 1;
+                }
+                else
+                {
+                    _nextItem++;
+                    var isSet = _currentField % 2;
+                    _currentField /= 2;
+                    if (isSet == 1) return true;
                 }
             }
-
-            /// <summary>Not supported.</summary>
-            void IEnumerator.Reset() => throw new NotSupportedException();
-
-            /// <inheritdoc/>
-            public readonly int Current => _nextItem;
-
-            /// <inheritdoc/>
-            object IEnumerator.Current => _nextItem;
-
-            /// <summary>
-            /// This implementation of <see cref="IDisposable"/> does nothing.
-            /// </summary>
-            void IDisposable.Dispose()
-            {
-            }
         }
+
+        /// <summary>
+        /// The current item.
+        /// </summary>
+        public readonly int Current => _nextItem;
+    }
+
+    // https://docs.microsoft.com/en-us/dotnet/api/system.collections.immutable.immutablearray-1.enumerator?view=netcore-3.1#remarks
+    internal sealed class BitCollectionEnumeratorWrapper : IEnumerator<int>
+    {
+        private BitCollectionEnumerator _enumerator;
+
+        public BitCollectionEnumeratorWrapper(BitCollectionEnumerator enumerator)
+        {
+            _enumerator = enumerator;
+        }
+
+        void IDisposable.Dispose()
+        {
+        }
+
+        public bool MoveNext() => _enumerator.MoveNext();
+        public int Current => _enumerator.Current;
+        void IEnumerator.Reset() => throw new NotSupportedException();
+        object IEnumerator.Current => Current;
+    }
 
     public partial struct BitSet
     {
@@ -77,10 +89,10 @@ namespace BitCollections
         public BitCollectionEnumerator GetEnumerator() => new BitCollectionEnumerator(_data, _extra, 0);
 
         /// <inheritdoc/>
-        IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => new BitCollectionEnumeratorWrapper(GetEnumerator());
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => new BitCollectionEnumeratorWrapper(GetEnumerator());
     }
 
     public partial class BitArrayNeo
@@ -93,9 +105,9 @@ namespace BitCollections
         }
 
         /// <inheritdoc/>
-        IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => new BitCollectionEnumeratorWrapper(GetEnumerator());
 
         /// <inheritdoc/>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => new BitCollectionEnumeratorWrapper(GetEnumerator());
     }
 }
