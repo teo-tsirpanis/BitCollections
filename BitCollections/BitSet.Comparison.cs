@@ -36,7 +36,7 @@ namespace BitCollections
         public bool Equals(BitArrayNeo? other) => other != null && other.Equals(this);
 
         /// <inheritdoc/>
-        public override bool Equals(object? obj) => obj is BitSet x && Equals(x);
+        public override bool Equals(object? obj) => obj is BitSet x && AreEqual(in this, in x);
 
         /// <inheritdoc/>
         public override int GetHashCode()
