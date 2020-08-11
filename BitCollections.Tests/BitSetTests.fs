@@ -108,8 +108,9 @@ let ``A universe BitSet contains the elements it should`` count =
         Assert.Equal<_ seq>({0 .. count - 1}, universe)
 
 [<Property>]
-let ``The complement of a BitSet has no shared elements with itself`` bs =
-    let universe = BitSet.Universe(Seq.max bs)
-    let bsComplement = universe.Difference(&bs)
-    let intersection = BitSet.Intersect(&bs, &bsComplement)
-    Assert.Empty intersection
+let ``The complement of a BitSet has no shared elements with itself`` (bs: BitSet) =
+    (not bs.IsEmpty) ==> lazy (
+        let universe = BitSet.Universe(Seq.max bs)
+        let bsComplement = universe.Difference(&bs)
+        let intersection = BitSet.Intersect(&bs, &bsComplement)
+        Assert.Empty intersection)
