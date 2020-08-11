@@ -25,7 +25,14 @@ namespace BitCollections
         /// <inheritdoc/>
         public bool Equals(BitSet other) => AreEqual(in this, in other);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compares this <see cref="BitArrayNeo"/>
+        /// with a <see cref="BitSet"/> to see if they are equal.
+        /// </summary>
+        /// <param name="other">The bit set.</param>
+        /// <returns>Whether they are equal.</returns>
+        /// <remarks>The <see cref="BitArrayNeo.BitCapacity"/> of
+        /// <paramref name="other"/> is not taken into account.</remarks>
         public bool Equals(BitArrayNeo? other) => other != null && other.Equals(this);
 
         /// <inheritdoc/>

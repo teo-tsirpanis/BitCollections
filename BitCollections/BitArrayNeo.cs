@@ -13,11 +13,11 @@ namespace BitCollections
     /// <summary>
     /// A fixed-length and mutable array of bits.
     /// </summary>
-    /// <remarks>Its difference from <see cref="System.Collections.BitArray"/>
+    /// <remarks>Its main difference from <see cref="System.Collections.BitArray"/>
     /// is that the <see cref="BitArrayNeo"/>'s mutating methods returns whether
     /// the collection's content changed.</remarks>
     [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
-    public partial class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable, IEnumerable<int>
+    public partial class BitArrayNeo : ICloneable, IEnumerable<int>
     {
         private readonly ulong[] _data;
         private readonly int _bitCapacity;
@@ -215,7 +215,14 @@ namespace BitCollections
         /// </summary>
         public ReadOnlySpan<ulong> AsSpan() => new ReadOnlySpan<ulong>(_data);
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compares this <see cref="BitArrayNeo"/>
+        /// with another one to see if they are equal.
+        /// </summary>
+        /// <param name="other">The other bit array.</param>
+        /// <returns>Whether they are equal.</returns>
+        /// <remarks>To be equal, the two bit arrays must
+        /// have the same <see cref="BitCapacity"/>.</remarks>
         public bool Equals(BitArrayNeo? other)
         {
             if (ReferenceEquals(this, other)) return true;
@@ -223,7 +230,14 @@ namespace BitCollections
                    _data.AsSpan().SequenceEqual(other._data.AsSpan());
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Compares this <see cref="BitArrayNeo"/>
+        /// with a <see cref="BitSet"/> to see if they are equal.
+        /// </summary>
+        /// <param name="other">The bit set.</param>
+        /// <returns>Whether they are equal.</returns>
+        /// <remarks>The <see cref="BitCapacity"/> of this
+        /// bit array is not taken into account.</remarks>
         public bool Equals(BitSet other)
         {
             if (_data.Length == 0) return other.IsEmpty;

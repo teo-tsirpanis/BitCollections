@@ -17,14 +17,14 @@ namespace BitCollections
     /// An immutable set of bit values.
     /// </summary>
     [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
-    public readonly partial struct BitSet : IEquatable<BitSet>, IEquatable<BitArrayNeo>, IComparable<BitSet>,
+    public readonly partial struct BitSet : IEquatable<BitSet>, IComparable<BitSet>,
         IComparable, IEnumerable<int>
     {
         // We don't allocate for the first 64 bits.
         private readonly ulong _data;
 
-        // The bits after the first 64.
-        // Zeroes at the beginning have to be trimmed.
+        // The bits after the first 64. Zeroes at
+        // the end of the array must be trimmed.
         private readonly ulong[] _extra;
 
         private static readonly ulong[] _emptyArray =
