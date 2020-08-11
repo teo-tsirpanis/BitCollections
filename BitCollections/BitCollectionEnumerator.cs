@@ -35,7 +35,7 @@ namespace BitCollections
                 {
                     if (_currentField == 0)
                     {
-                        if (_currentFieldIndex == _extra.Length - 1)
+                        if (_currentFieldIndex >= _extra.Length - 1)
                             return false;
                         _currentFieldIndex++;
                         _currentField = _extra[_currentFieldIndex];

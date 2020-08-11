@@ -101,3 +101,14 @@ let ``Equality checks between BitSets and BitArrayNeoes work`` (ban: BitArrayNeo
     let bs = ban.ToBitSet()
     Assert.True(ban.Equals bs)
     Assert.True(bs.Equals ban)
+
+[<Property>]
+let ``BitArrayNeo.SetAll works`` (NonNegativeInt capacity) =
+    let ban = BitArrayNeo(capacity, false)
+    Assert.True(ban.Equals BitSet.Empty)
+    Assert.Empty ban
+    ban.SetAll true
+    Assert.True(BitSet.Universe(capacity).Equals ban)
+    Assert.Equal(capacity, Seq.length ban)
+    let ban' = BitArrayNeo(capacity, true)
+    Assert.Equal<BitArrayNeo>(ban, ban')

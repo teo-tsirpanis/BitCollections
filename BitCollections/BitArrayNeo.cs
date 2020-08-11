@@ -29,13 +29,15 @@ namespace BitCollections
         /// </summary>
         /// <param name="bitCapacity">The amount of bits this bit array
         /// can hold. The lowest is zero and the highest is (<paramref name="bitCapacity"/> - 1).</param>
+        /// <param name="initialValue">The initial value the bits will have.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="bitCapacity"/> is negative.</exception>
-        public BitArrayNeo(int bitCapacity)
+        public BitArrayNeo(int bitCapacity, bool initialValue = false)
         {
             if (bitCapacity < 0)
                 throw new ArgumentOutOfRangeException(nameof(bitCapacity));
             _bitCapacity = bitCapacity;
             _data = new ulong[bitCapacity == 0 ? 0 : bitCapacity / 64 + 1];
+            if (initialValue) SetAll(initialValue);
         }
 
         /// <summary>
@@ -173,6 +175,23 @@ namespace BitCollections
             // This allows easy comparison and conversion to BitSet
             // and they cannot be changed from any other place.
             _data[_data.Length - 1] &= (1ul << _bitCapacity) - 1;
+        }
+
+        /// <summary>
+        /// Sets all bits of this <see cref="BitArrayNeo"/>
+        /// to <paramref name="value"/>.
+        /// </summary>
+        /// <param name="value">The value the bits will take.</param>
+        public void SetAll(bool value)
+        {
+            if (_data.Length == 0) return;
+            if (value)
+            {
+                _data.AsSpan().Fill(ulong.MaxValue);
+                _data[_data.Length - 1] &= (1ul << _bitCapacity) - 1;
+            }
+            else
+                _data.AsSpan().Fill(0);
         }
 
         /// <summary>

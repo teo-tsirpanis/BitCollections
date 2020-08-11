@@ -16,6 +16,5 @@ These two types can be converted to each other. Both implement `IEnumerable<int>
 `BitArrayNeo` is not a drop-in replacement for `BitArray`. Features it is missing:
 
 * The `LeftShift`/`RightShift` methods
-* The `SetAll` method
 * Some additional constructors (such as accepting an array of bytes or booleans)
 * SIMD acceleration
