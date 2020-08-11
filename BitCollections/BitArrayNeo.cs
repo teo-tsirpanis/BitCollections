@@ -15,8 +15,7 @@ namespace BitCollections
     /// </summary>
     /// <remarks>Its difference from <see cref="System.Collections.BitArray"/>
     /// is that the <see cref="BitArrayNeo"/>'s mutating methods returns whether
-    /// the collection's content changed. Other members can be requested by opening
-    /// a GitHub issue.</remarks>
+    /// the collection's content changed.</remarks>
     [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
     public partial class BitArrayNeo : IEquatable<BitArrayNeo>, IEquatable<BitSet>, ICloneable, IEnumerable<int>
     {

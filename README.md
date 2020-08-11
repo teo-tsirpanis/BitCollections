@@ -9,12 +9,14 @@ BitCollections is a library that provides efficient collections storing bit valu
 
 * `BitArrayNeo`: A mutable class, has a similar API with `System.Collections.BitArray`, its modification methods return whether the collection changed.
 
-These two types can be converted to each other. Both implement `IEnumerable<int>`, returning the indices of their active bits.
+These two types can be converted and checked for equality against each other. Both implement `IEnumerable<int>`, returning the indices of their active bits.
 
 ## Missing features
 
-`BitArrayNeo` is not a drop-in replacement for `BitArray`. Features it is missing:
+`BitArrayNeo` is not a drop-in replacement for `BitArray`. In particular, it is missing features like:
 
 * The `LeftShift`/`RightShift` methods
 * Some additional constructors (such as accepting an array of bytes or booleans)
 * SIMD acceleration
+
+`BitSet` is missing some set-relational operators (such as `IsSubsetOf`) that might come in handy. They will be added in a future release.
