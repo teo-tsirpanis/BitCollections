@@ -146,7 +146,7 @@ namespace BitCollections
         /// <summary>
         /// Whether this <see cref="BitSet"/> is empty.
         /// </summary>
-        public bool IsEmpty => _data == 0 && (_extra == null || _extra.Length == 0);
+        public bool IsEmpty => _data == 0 && (_extra == null! || _extra.Length == 0);
 
         /// <summary>
         /// Checks whether the bit with the given index is present.

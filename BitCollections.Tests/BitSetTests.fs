@@ -3,7 +3,7 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-[<FsCheck.Xunit.Properties(Arbitrary = [|typeof<BitCollections.Tests.Generators>|], MaxTest = 500, EndSize = 1_000)>]
+[<FsCheck.Xunit.Properties(Arbitrary = [|typeof<Generators>|], MaxTest = 500, EndSize = 1_000)>]
 module BitCollections.Tests.BitSetTests
 
 open System
