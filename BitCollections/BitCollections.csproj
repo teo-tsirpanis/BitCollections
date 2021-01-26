@@ -3,12 +3,14 @@
     <TargetFrameworks>net45;net461;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Description>A newer API for collections that store bits.</Description>
     <Authors>Theodore Tsirpanis</Authors>
     <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License.</Copyright>
     <PackageProjectUrl>https://github.com/teo-tsirpanis/BitCollections</PackageProjectUrl>
-    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix an enumeration bug on bit collections whose smallest element is at least 128.
+Use consistent casing in the bit collections' ToString representation.
+Update framework dependencies.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>bitarray bit collections</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
