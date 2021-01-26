@@ -92,7 +92,7 @@ let ``Singleton returns a BitSet with only one element`` idx =
     if idx < 0 then
         Assert.Throws<ArgumentOutOfRangeException>(Action(fun () -> BitSet.Singleton idx |> ignore)) |> ignore
     else
-        Assert.Single(BitSet.Singleton idx) |> ignore
+        Assert.Equal(idx, Assert.Single(BitSet.Singleton idx))
 
 [<Property>]
 let ``Unsetting the only bit of a BitSet correctly trims the extra array`` (NonNegativeInt x) =

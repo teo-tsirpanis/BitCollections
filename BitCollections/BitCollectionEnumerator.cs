@@ -15,17 +15,19 @@ namespace BitCollections
     /// </summary>
     public struct BitCollectionEnumerator
     {
-        private readonly ulong[] _extra;
-        private int _nextItem;
-        private ulong _currentField;
-        private int _currentFieldIndex;
+        private readonly ulong[] _extraWords;
+        private readonly int _extraStartIndex;
+        private int _currentItem;
+        private ulong _currentWord;
+        private int _currentWordIndex;
 
         internal BitCollectionEnumerator(ulong first, ulong[] rest, int restStartIndex)
         {
-            _currentField = first;
-            _extra = rest;
-            _nextItem = -1;
-            _currentFieldIndex = restStartIndex - 1;
+            _extraWords = rest;
+            _extraStartIndex = restStartIndex;
+            _currentItem = -1;
+            _currentWord = first;
+            _currentWordIndex = restStartIndex - 1;
         }
 
         /// <summary>
@@ -36,22 +38,19 @@ namespace BitCollections
         {
             while (true)
             {
-                if (_currentField == 0)
+                if (_currentWord == 0)
                 {
-                    if (_currentFieldIndex >= _extra.Length - 1)
+                    if (_currentWordIndex >= _extraWords.Length - 1)
                         return false;
-                    _currentFieldIndex++;
-                    _currentField = _extra[_currentFieldIndex];
-                    // We set _nextItem to one number less than
-                    // the closest multiple of 64 that is bigger
-                    // than _nextItem.
-                    _nextItem = (_nextItem / 64 + 1) * 64 - 1;
+                    _currentWordIndex++;
+                    _currentWord = _extraWords[_currentWordIndex];
+                    _currentItem = (_currentWordIndex - _extraStartIndex + 1) * 64 - 1;
                 }
                 else
                 {
-                    _nextItem++;
-                    var isSet = _currentField % 2;
-                    _currentField /= 2;
+                    _currentItem++;
+                    var isSet = _currentWord % 2;
+                    _currentWord /= 2;
                     if (isSet == 1) return true;
                 }
             }
@@ -60,7 +59,7 @@ namespace BitCollections
         /// <summary>
         /// The current item.
         /// </summary>
-        public readonly int Current => _nextItem;
+        public readonly int Current => _currentItem;
     }
 
     // https://docs.microsoft.com/en-us/dotnet/api/system.collections.immutable.immutablearray-1.enumerator?view=netcore-3.1#remarks
