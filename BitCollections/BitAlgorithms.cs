@@ -145,10 +145,10 @@ namespace BitCollections
 
         internal static string FormatBitArray(ulong first, ReadOnlySpan<ulong> rest)
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(17 * rest.Length + 16);
             for (int i = rest.Length - 1; i >= 0; i--)
             {
-                sb.Append(rest[i].ToString("x16")).Append('-');
+                sb.Append(rest[i].ToString("X16")).Append('-');
             }
             sb.Append(first.ToString("X16"));
             return sb.ToString();
