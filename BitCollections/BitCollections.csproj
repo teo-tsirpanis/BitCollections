@@ -4,6 +4,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
     <Description>A newer API for collections that store bits.</Description>
     <Authors>Theodore Tsirpanis</Authors>
     <Copyright>Copyright © Theodore Tsirpanis. Licensed under the MIT License.</Copyright>
