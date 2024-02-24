@@ -7,11 +7,6 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-#if NETCOREAPP3_1
-using System.Runtime.Intrinsics.X86;
-
-#endif
-
 namespace BitCollections
 {
     internal static class BitAlgorithms
@@ -31,16 +26,7 @@ namespace BitCollections
             count >= 64 ? ulong.MaxValue : (1ul << count) - 1;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static ulong AndNotSingle(ulong x1, ulong x2)
-        {
-#if NETCOREAPP3_1
-            if (Bmi1.X64.IsSupported)
-                // In the BMI instruction, it is the
-                // first parameter that gets negated.
-                return Bmi1.X64.AndNot(x2, x1);
-#endif
-            return x1 & ~ x2;
-        }
+        internal static ulong AndNotSingle(ulong x1, ulong x2) => x1 & ~x2;
 
         private static void ThrowDifferentLength() =>
             throw new ArgumentException("Spans have different length.");
