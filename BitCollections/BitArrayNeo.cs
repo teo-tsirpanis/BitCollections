@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using JetBrains.Annotations;
 
 namespace BitCollections
 {
@@ -16,7 +15,7 @@ namespace BitCollections
     /// <remarks>Its main difference from <see cref="System.Collections.BitArray"/>
     /// is that the <see cref="BitArrayNeo"/>'s mutating methods returns whether
     /// the collection's content changed.</remarks>
-    [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
+    [DebuggerTypeProxy(typeof(BitCollectionDebugView))]
     public partial class BitArrayNeo : ICloneable, IEnumerable<int>
     {
         private readonly ulong[] _data;
@@ -65,7 +64,7 @@ namespace BitCollections
         private static void ThrowNegativeValue(int x) =>
             throw new ArgumentOutOfRangeException(nameof(x), x, "BitArrayNeoes cannot store negative values.");
 
-        private static void ThrowDifferentCapacity([InvokerParameterName] string paramName) =>
+        private static void ThrowDifferentCapacity(string paramName) =>
             throw new ArgumentException("The BitArrayNeoes' capacities differ.", paramName);
 
         /// <summary>

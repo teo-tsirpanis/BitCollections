@@ -6,7 +6,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace BitCollections
 {
@@ -22,7 +21,7 @@ namespace BitCollections
         {
         }
 
-        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden), UsedImplicitly]
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public int[] Items { get; }
     }
 }

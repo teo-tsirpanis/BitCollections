@@ -9,14 +9,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 
 namespace BitCollections
 {
     /// <summary>
     /// An immutable set of bit values.
     /// </summary>
-    [PublicAPI, DebuggerTypeProxy(typeof(BitCollectionDebugView))]
+    [DebuggerTypeProxy(typeof(BitCollectionDebugView))]
     public readonly partial struct BitSet : IEquatable<BitSet>, IComparable<BitSet>,
         IComparable, IEnumerable<int>
     {
@@ -51,7 +50,7 @@ namespace BitCollections
             return length == 0 ? _emptyArray : new ulong[length];
         }
 
-        private static void ThrowNegativeValue([InvokerParameterName] string paramName, int x) =>
+        private static void ThrowNegativeValue(string paramName, int x) =>
             throw new ArgumentOutOfRangeException(paramName, x, "BitSets cannot store negative values");
 
         /// <summary>
