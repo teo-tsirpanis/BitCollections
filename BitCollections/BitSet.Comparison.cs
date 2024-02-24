@@ -41,20 +41,11 @@ namespace BitCollections
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-#if !NET45
             HashCode h = new HashCode();
             h.Add(_data);
             h.Add(_extra.Length);
             foreach (var x in _extra) h.Add(x);
             return h.ToHashCode();
-#else
-            var h = 17;
-            h = h * 31 + _data.GetHashCode();
-            h = h * 31 + _extra.Length.GetHashCode();
-            for (int i = 0; i < _extra.Length; i++)
-                h = h * 31 + _extra[i].GetHashCode();
-            return h;
-#endif
         }
 
         /// <inheritdoc/>

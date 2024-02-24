@@ -26,12 +26,6 @@ namespace BitCollections
         // the end of the array must be trimmed.
         private readonly ulong[] _extra;
 
-        private static readonly ulong[] _emptyArray =
-#if !NET45
-            Array.Empty<ulong>();
-#else
-            new ulong[0];
-#endif
         private static readonly BitSet _empty = new BitSet(0, NewArray(0));
 
         internal BitSet(ulong data, ulong[] extra)
@@ -45,10 +39,7 @@ namespace BitCollections
         internal ulong Data => _data;
         internal ReadOnlySpan<ulong> Extra => new ReadOnlySpan<ulong>(_extra);
 
-        private static ulong[] NewArray(int length)
-        {
-            return length == 0 ? _emptyArray : new ulong[length];
-        }
+        private static ulong[] NewArray(int length) => length == 0 ? [] : new ulong[length];
 
         private static void ThrowNegativeValue(string paramName, int x) =>
             throw new ArgumentOutOfRangeException(paramName, x, "BitSets cannot store negative values");
@@ -64,7 +55,7 @@ namespace BitCollections
         {
             if (x < 0) ThrowNegativeValue(nameof(x), x);
             if (x < 64)
-                return new BitSet(1ul << x, _emptyArray);
+                return new BitSet(1ul << x, []);
 
             var idx = x / 64;
             var extra = NewArray(idx);
@@ -83,7 +74,7 @@ namespace BitCollections
         {
             if (count < 0) ThrowNegativeValue(nameof(count), count);
             if (count <= 64)
-                return new BitSet(BitAlgorithms.GetFirstBitsOn(count), _emptyArray);
+                return new BitSet(BitAlgorithms.GetFirstBitsOn(count), []);
 
             // We want to find the position of the last
             // bit, not the position of the bit count.
